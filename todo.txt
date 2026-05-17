@@ -1,0 +1,2 @@
+AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12
+ putzen|HAUSHALT|punzen and Mull rausbringen|NIEDRIG|OFFEN|2026-06-01
