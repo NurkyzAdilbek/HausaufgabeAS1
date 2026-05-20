@@ -1,3 +1,4 @@
 AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12
 ISDA|STUDIUM|Vorleistung: Datenbankerstellung|HOCH|OFFEN|2026-05-20
 Bewerbungsgesprach|SONSTIGES|Vorbereitung auf neuen Job|NIEDRIG|FERTIG|2026-09-12
+AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12

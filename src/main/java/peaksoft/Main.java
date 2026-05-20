@@ -25,12 +25,12 @@ TaskManager taskManager = new TaskManager();
        // taskManager.deleteTaskByName("AS");
 
         for (Task task1 : taskManager.getTasks()) {
-            System.out.println(task1);
+            //System.out.println(task1);
         }
 //taskManager.getOffeneTasks();
 //taskManager.searchAndUpdateStatus("putzen",TaskStatus.FERTIG);
-        for (Task task1 : taskManager.getOffeneTasks()) {
-           // taskManager.deleteTaskByName("putzen");
+        for (Task task1 : taskManager.getTasksByDateFromTo(LocalDate.of(2026,05,19),LocalDate.of(2026,06,23))) {
+            System.out.println(task1);
         }
       //
         //taskManager.deleteTaskByName(" Bewerbungsgesprach ");

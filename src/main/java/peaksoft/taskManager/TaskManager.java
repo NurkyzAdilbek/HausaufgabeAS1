@@ -22,27 +22,37 @@ public class TaskManager {
   //CREATE METHOD
 
     public void addTask(Task task) {
+        if (task==null){
+            throw new IllegalArgumentException("Task is null");
+        }
        this.tasks.add(task);
        fileManager.taskSpeichern(tasks);
        log.info("Task wurde erfolgleich hinzugefugt: "+task.getTaskName());
     }
 
     //GET METHODS
+
     public List<Task> getTasks() {
         return this.tasks;
     }
 
     public Task getTaskByName(String name) {
+        if (name==null||name.isEmpty()){
+            throw new IllegalArgumentException("Name ist null oder leer");
+        }
         for (Task task:this.tasks) {
             if (task.getTaskName().equalsIgnoreCase(name)){
                 return task;
             }
-
         }
       log.warn(" Kein Task mit Name "+name+" gefunden");
         return null;
     }
+
     public List<Task> getTasksByPriority(Priority priority) {
+        if (priority==null){
+            throw new IllegalArgumentException("Priority is null");
+        }
         List<Task>ergebnis=new ArrayList<>();
         for (Task task:this.tasks) {
             if (task.getPriority() == priority){
@@ -58,6 +68,9 @@ public class TaskManager {
         return ergebnis;
     }
 public List<Task> getTasksByDate(LocalDate date) {
+        if (date==null){
+            throw new IllegalArgumentException("Date is null");
+        }
         List<Task> ergebnis =new ArrayList<>();
         for (Task task: this.tasks) {
             if (task.getFalligkeit().equals(date)){
@@ -74,6 +87,9 @@ public List<Task> getTasksByDate(LocalDate date) {
 }
 
     public List<Task> getTasksByDateFromTo(LocalDate from, LocalDate to ) {
+        if (from==null||to==null){
+            throw new IllegalArgumentException("From and To are null");
+        }
         List<Task> ergebnis=new ArrayList<Task>();
         for (Task task:this.tasks) {
             if (!task.getFalligkeit().isBefore(from)&&
@@ -119,6 +135,9 @@ public List<Task> getTasksByDate(LocalDate date) {
         return ergebnis;
     }
 public List<Task> getTasksByType(TaskType type){
+        if (type==null){
+            throw new IllegalArgumentException("Type is null");
+        }
         List<Task>ergebnis=new ArrayList<>();
         for (Task task:this.tasks) {
             if (task.getTaskType().equals(type)){
@@ -135,6 +154,9 @@ public List<Task> getTasksByType(TaskType type){
 }
 
 public List<Task>getByStatus(TaskStatus status){
+        if (status==null){
+            throw new IllegalArgumentException("Status is null");
+        }
         List<Task>ergebnis=new ArrayList<>();
         for (Task task:this.tasks) {
             if (task.getStatus().equals(status)){
@@ -153,6 +175,9 @@ public List<Task>getByStatus(TaskStatus status){
 
     //UPDATE METHODS
     public void updateStatus(Task gtask, TaskStatus newStatus) {
+        if(gtask==null||newStatus==null){
+            throw new IllegalArgumentException("Eingaben durfen nicht null sein");
+        }
         boolean gefunden = false;
         for (Task ftask : this.tasks) {
             if (ftask.equals(gtask)) {
@@ -170,7 +195,10 @@ public List<Task>getByStatus(TaskStatus status){
     }
 
 public void updatePriority(Task gtask, Priority newPriority) {
-       boolean gefunden = false;
+       if(gtask==null||newPriority==null){
+           throw new IllegalArgumentException("Eingaben durfen nicht null sein");
+       }
+        boolean gefunden = false;
         for (Task ftask:this.tasks) {
             if (ftask.equals(gtask)){
                 ftask.setPriority(newPriority);
@@ -187,14 +215,13 @@ public void updatePriority(Task gtask, Priority newPriority) {
         }
 
 public void updateDate(Task gtask, LocalDate newDate) {
-       boolean gefunden = false;
-        for (Task ftask:this.tasks) {
-            if (ftask.equals(gtask)){
-                ftask.setFalligkeit(newDate);
-                gefunden = true;
-            }
-        }
-        if(gefunden) {
+       if (gtask==null||newDate==null){
+           throw new IllegalArgumentException("Task der Date darf nicht null sein");
+
+       }
+       Task task=getTaskByName(gtask.getTaskName());
+        if(task!=null) {
+            task.setFalligkeit(newDate);
             fileManager.taskSpeichern(this.tasks);
             log.info("Upgrade date of task " + gtask.getTaskName() + " to " + newDate);
         }
@@ -203,17 +230,15 @@ public void updateDate(Task gtask, LocalDate newDate) {
         }
         }
 
-public void searchAndUpdateStatus(String taskName, TaskStatus newStatus) {
-       boolean gefunden = false;
-        for (Task task:this.tasks) {
-            if (task.getTaskName().equalsIgnoreCase(taskName)){
-                task.setStatus(newStatus);
-                gefunden = true;
-            }
-        }
-        if(gefunden) {
-            log.info("Upgrade status of task " + taskName + " to " + newStatus);
+public void getByNameAndUpdateStatus(String taskName, TaskStatus newStatus) {
+       if (taskName==null|| taskName.isEmpty()){
+           throw new IllegalArgumentException("Name darf nicht leer sein");
+       }
+       Task task=getTaskByName(taskName);
+        if(task!=null) {
+            task.setStatus(newStatus);
             fileManager.taskSpeichern(this.tasks);
+            log.info("Upgrade status of task " + taskName + " to " + newStatus);
         }
         else {
             log.warn(" Task "+taskName+" nicht gefunden");
@@ -223,8 +248,12 @@ public void searchAndUpdateStatus(String taskName, TaskStatus newStatus) {
 
 
 
+
             //DELETE METHODS
     public void deleteTask(Task gtask) {
+        if (gtask==null){
+            throw new IllegalArgumentException("Eingabe darf nicht leer sein");
+        }
         int vorher=this.tasks.size();
        this.tasks.removeIf(task->task.equals(gtask));
        boolean gefunden=this.tasks.size()<vorher;
@@ -240,7 +269,9 @@ public void searchAndUpdateStatus(String taskName, TaskStatus newStatus) {
 
 
     public void deleteTaskByName(String taskName) {
-
+        if (taskName==null||taskName.isEmpty()){
+            throw new IllegalArgumentException("Eingabe darf nicht leer sein");
+        }
         int vorher=this.tasks.size();
         this.tasks.removeIf(task -> task.getTaskName().equalsIgnoreCase(taskName));
         boolean gefunden=this.tasks.size()<vorher;
@@ -253,6 +284,9 @@ public void searchAndUpdateStatus(String taskName, TaskStatus newStatus) {
         }
     }
 public void deleteByPriority(Priority priority){
+    if (priority==null){
+        throw new IllegalArgumentException("Eingabe darf nicht leer sein");
+    }
         int vorher=this.tasks.size();
         this.tasks.removeIf(task -> task.getPriority().equals(priority));
         boolean gefunden=this.tasks.size()<vorher;
@@ -266,6 +300,9 @@ public void deleteByPriority(Priority priority){
 }
 
 public void deleteByStatus(TaskStatus status){
+        if(status==null){
+            throw new IllegalArgumentException("Eingabe darf nicht leer sein");
+        }
         int vorher=this.tasks.size();
         this.tasks.removeIf(task -> task.getStatus().equals(status));
         boolean gefunden=this.tasks.size()<vorher;
