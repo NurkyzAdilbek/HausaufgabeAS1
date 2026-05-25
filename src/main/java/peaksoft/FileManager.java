@@ -57,7 +57,6 @@ public class FileManager {
         catch(IOException e){
             log.error("Fehler beim Speichern aufgetreten");
         }
-
         log.info("Task wurde erfolgreich gespeichert");
     }
 

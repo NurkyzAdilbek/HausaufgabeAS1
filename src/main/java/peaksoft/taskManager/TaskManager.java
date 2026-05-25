@@ -217,7 +217,6 @@ public void updatePriority(Task gtask, Priority newPriority) {
 public void updateDate(Task gtask, LocalDate newDate) {
        if (gtask==null||newDate==null){
            throw new IllegalArgumentException("Task der Date darf nicht null sein");
-
        }
        Task task=getTaskByName(gtask.getTaskName());
         if(task!=null) {
@@ -231,7 +230,7 @@ public void updateDate(Task gtask, LocalDate newDate) {
         }
 
 public void getByNameAndUpdateStatus(String taskName, TaskStatus newStatus) {
-       if (taskName==null|| taskName.isEmpty()){
+       if (taskName==null|| taskName.isEmpty()||newStatus==null){
            throw new IllegalArgumentException("Name darf nicht leer sein");
        }
        Task task=getTaskByName(taskName);

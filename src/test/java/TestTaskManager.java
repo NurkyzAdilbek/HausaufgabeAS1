@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -154,4 +155,190 @@ void testGetByTypeNull(){
         taskManager.getByStatus(null);
     });
 }
+@Test
+@DisplayName("Tasks Status wurde erfolgreich aktualisiert ")
+    void testUpdateTaskStatus() {
+    taskManager.addTask(testTask);
+    taskManager.updateStatus(testTask,TaskStatus.FERTIG);
+    assertEquals(TaskStatus.FERTIG, taskManager.getTaskByName("AS").getStatus());
+}
+@Test
+@DisplayName("Null Task wirft Exception")
+    void testUpdateTaskNull(){
+    assertThrows(IllegalArgumentException.class,()->{
+        taskManager.updateStatus(null,TaskStatus.FERTIG);
+    });
+}
+@Test
+@DisplayName("Null Status wirft Exception")
+    void testUpdateStatusNull(){
+    assertThrows(IllegalArgumentException.class,()->{
+        taskManager.updateStatus(null,null);
+    });
+}
+@Test
+@DisplayName("Null Task und Null Status werfen Exception")
+    void testUpdateTaskNullNull() {
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.updateStatus(null, null);
+    });
+
+}
+
+@Test
+@DisplayName("Tasks Priority wurde erfolgreich aktualisiert ")
+    void testUpdateTaskPriority(){
+    taskManager.addTask(testTask);
+    taskManager.updatePriority(testTask,Priority.NIEDRIG);
+    assertEquals(Priority.NIEDRIG, testTask.getPriority());
+
+}
+@Test
+@DisplayName("Null Task und Null Priority werfen Exception")
+    void testUpdateTaskPriorityNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.updatePriority(null, null);
+    });
+}
+
+@Test
+@DisplayName("Null Task wirft Exception" )
+void testUpdateByTaskNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.updatePriority(null,Priority.NIEDRIG);
+    });
+}
+@Test
+@DisplayName("Null Priority wirft Exception")
+    void testUpdatePriorityNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.updatePriority(testTask, null);
+    });
+}
+@Test
+@DisplayName("Datum wurde erfolgreich aktualiesiert")
+    void testUpdateByDatum(){
+    taskManager.addTask(testTask);
+    taskManager.updateDate(testTask,LocalDate.of(2026,07,22));
+    Task task = taskManager.getTaskByName("AS");
+    assertEquals(LocalDate.of(2026,07,22),task.getFalligkeit());
+}
+@Test
+    @DisplayName("Null Datum wirft Exception")
+    void testUpdateByDatumNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.updateDate(testTask,null);
+    }) ;
+}
+@Test
+    @DisplayName("Null Task wirft Exception")
+    void testUpdateByNullTask(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.updateDate(null,LocalDate.of(2026,07,22));
+    })   ;
+}
+@Test
+    @DisplayName("Null Datum und Null Task werfen Exception")
+    void testUpdateByNullDatumNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.updateDate(null,null);
+    });
+}
+
+@Test
+@DisplayName("Task wurde erfolgreich by Name gefunden und Status wurde aktualisiert")
+    void testTaskbyNameandStatusUpdate(){
+    taskManager.addTask(testTask);
+    taskManager.getByNameAndUpdateStatus(testTask.getTaskName(),TaskStatus.OFFEN);
+    assertEquals(TaskStatus.OFFEN, taskManager.getTaskByName("AS").getStatus());
+}
+
+@Test
+    @DisplayName("Null Taskname wirft Exception")
+    void testUpdateTasknameNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.getByNameAndUpdateStatus(null,TaskStatus.OFFEN);
+    }) ;
+}
+
+@Test
+    @DisplayName("Null Status wirft Exception")
+    void testUpdateTaskStatusNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.getByNameAndUpdateStatus("AS",null);
+    });
+}
+
+@Test
+@DisplayName("Null Taskname und Null Status werfen Exception")
+    void testUpdateNullNameandNullStatus(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.getByNameAndUpdateStatus(null,null);
+    })    ;
+}
+    @Test
+    @DisplayName("Task wurde erfolgreich gelöscht")
+    void testDeleteTask (){
+    taskManager.addTask(testTask);
+    taskManager.deleteTask(testTask);
+    assertFalse(taskManager.getTasks().contains(testTask));
+    }
+
+    @Test
+    @DisplayName("Null Task wirft Exception")
+    void testDeleteTaskNull(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.deleteTask(null);
+    });
+    }
+
+      @Test
+    @DisplayName("Task wurde by Name gefunden und erfolgreich geloscht")
+    void testDeleteTaskByTaskName(){
+    taskManager.addTask(testTask);
+    taskManager.deleteTaskByName("AS");
+     assertNull(taskManager.getTaskByName("AS"));
+}
+
+@Test
+    @DisplayName("Null Name wirft Exception")
+    void testDeleteTaskNullName(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.deleteTask(null);
+    })    ;
+}
+@Test
+    @DisplayName("Task wurde erfolgreich by Priority geloscht")
+    void testDeleteTaskByPriority(){
+    taskManager.addTask(testTask);
+    taskManager.deleteByPriority(testTask.getPriority());
+    assertTrue(taskManager.getTasksByPriority(Priority.HOCH).isEmpty());
+}
+
+@Test
+    @DisplayName("Null Priority wirft Exception")
+    void testDeleteTaskNullPriority(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.deleteTask(null);
+    }) ;
+}
+
+@Test
+    @DisplayName("Task wurde  by Status gefunden und erfolgreich geloscht")
+    void testDeleteTaskByStatus(){
+    taskManager.addTask(testTask);
+    taskManager.deleteByStatus(TaskStatus.OFFEN);
+    assertTrue(taskManager.getByStatus(TaskStatus.OFFEN).isEmpty());
+}
+    @Test
+    @DisplayName("Nyll Status wirft Exception")
+    void testDeleteTaskNullStatus(){
+    assertThrows(IllegalArgumentException.class, () -> {
+        taskManager.deleteTask(null);
+    })  ;
+    }
+
+
+
+
 }
