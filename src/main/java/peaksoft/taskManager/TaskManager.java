@@ -173,6 +173,96 @@ public List<Task>getByStatus(TaskStatus status){
         return ergebnis;
 }
 
+public List<Task>getOffeneTasksByPriority(Priority priority){
+        if (priority==null){
+            throw new IllegalArgumentException("Priority is null");
+        }
+        List<Task>ergebnis=new ArrayList<>();
+        for (Task task:this.tasks) {
+            if (task.getStatus().equals(TaskStatus.OFFEN)&&task.getPriority().equals(priority)){
+                ergebnis.add(task);
+            }
+        }
+        if (ergebnis.isEmpty()){
+            log.warn("Keine Tasks mit Priority "+priority+" gefunden");
+        }
+        else {
+            log.info("Tasks wurden erfolgleich gefunden");
+        }
+        return  ergebnis;
+
+}
+
+public List<Task>getTasksByTypeAndStatus(TaskType type,TaskStatus status){
+        if (type==null||status==null){
+            throw new IllegalArgumentException("Type and status are null");
+        }
+        List<Task>ergebnis=new ArrayList<>();
+        for (Task task:this.tasks) {
+            if (task.getStatus().equals(status)&&task.getTaskType().equals(type)){
+                ergebnis.add(task);
+            }
+        }
+        if (ergebnis.isEmpty()){
+            log.warn("Keine Tasks mit Status "+status+"und "+type +" gefunden");
+        }
+        else {
+            log.info("Tasks wurden erfolgleich gefunden");
+        }
+        return ergebnis;
+}
+public List<Task>getUberfalligeTasks(){
+        List<Task>ergebnis=new ArrayList<>();
+        for (Task task:this.tasks) {
+            if (task.getFalligkeit().isBefore(LocalDate.now())){
+                ergebnis.add(task);
+            }
+        }
+        if (ergebnis.isEmpty()){
+            log.warn(" Keine uberfalligen Tasks wurden gefunden");
+        }
+        else {
+            log.info("Tasks wurden erfolgleich gefunden");
+        }
+        return ergebnis;
+}
+public List<Task> getTasksOfWeek(){
+
+        List<Task>ergebnis=new ArrayList<>();
+        LocalDate date=LocalDate.now();
+        LocalDate wochenende=date.plusDays(7);
+        for (Task task:this.tasks) {
+            if(task.getFalligkeit().isAfter(date)&&task.getFalligkeit().isBefore(wochenende)){
+                ergebnis.add(task);
+            }
+        }
+        if (ergebnis.isEmpty()){
+            log.warn("Keine Tasks fur diese Woche wurden gefunden");
+        }
+        else{
+            log.info("Tasks wurden erfolgleich gefunden");
+        }
+        return  ergebnis;
+}
+public List<Task>getTasksbyTypeAndPriority(TaskType type,Priority priority){
+        if (type==null||priority==null){
+            throw new IllegalArgumentException("Type and priority are null");
+        }
+        List<Task>ergebnis=new ArrayList<>();
+        for (Task task:this.tasks) {
+            if (task.getTaskType().equals(type)
+            &&task.getPriority().equals(priority)){
+                ergebnis.add(task);
+            }
+        }
+        if (ergebnis.isEmpty()){
+            log.warn("Keine Tasks mit Type "+type+ " and "+priority +" gefunden");
+        }
+        else {
+            log.info("Tasks wurden erfolgleich gefunden");
+        }
+        return ergebnis;
+}
     //UPDATE METHODS
     public void updateStatus(Task gtask, TaskStatus newStatus) {
         if(gtask==null||newStatus==null){

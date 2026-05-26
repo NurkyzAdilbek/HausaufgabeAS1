@@ -30,10 +30,12 @@ TaskManager taskManager = new TaskManager();
 //taskManager.getOffeneTasks();
 //taskManager.searchAndUpdateStatus("putzen",TaskStatus.FERTIG);
         for (Task task1 : taskManager.getTasksByDateFromTo(LocalDate.of(2026,05,19),LocalDate.of(2026,06,23))) {
-            System.out.println(task1);
+            //System.out.println(task1);
         }
       //
         //taskManager.deleteTaskByName(" Bewerbungsgesprach ");
-
+for (Task t:taskManager.getTasksByTypeAndStatus(TaskType.STUDIUM, TaskStatus.OFFEN)) {
+    System.out.println(t);
+}
     }
 }

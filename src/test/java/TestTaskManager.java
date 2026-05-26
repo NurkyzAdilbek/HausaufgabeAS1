@@ -7,338 +7,435 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 
 public class TestTaskManager {
-private TaskManager taskManager;
-private Task testTask;
+    private TaskManager taskManager;
+    private Task testTask;
 
 
-@BeforeEach
+    @BeforeEach
     public void setUp() {
-    taskManager = new TaskManager();
-    testTask = new Task("AS", TaskType.STUDIUM,"Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026,06,12));
-}
+        taskManager = new TaskManager();
+        testTask = new Task("AS", TaskType.STUDIUM, "Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026, 05, 27));
+    }
 
-@Test
-@DisplayName("Task erfolgreich hinzufügen")
-void testAddTask(){
-    taskManager.addTask(testTask);
-    assertTrue(taskManager.getTasks().contains(testTask));
-}
-@Test
-@DisplayName("Null Task wirft Exception")
-    void testAddTaskNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.addTask(null);
-            });
-}
+    @Test
+    @DisplayName("Task erfolgreich hinzufügen")
+    void testAddTask() {
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasks().contains(testTask));
+    }
 
-@Test
-@DisplayName("Get all Tasks ")
-    void testGetAllTasks(){
-    taskManager.addTask(testTask);
-    assertFalse(taskManager.getTasks().isEmpty());
-}
-@Test
-@DisplayName("Task wurde erfolgreich gefunden")
-    void testTaskByName(){
-    taskManager.addTask(testTask);
-   assertNotNull(taskManager.getTaskByName("AS"));
-}
-@Test
-@DisplayName("Null Name wirft Exception")
-    void testTaskByNameNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.addTask(null);
-    });
-}
-@Test
-@DisplayName("Leerer Name wirft Exception")
-    void testTaskByNameEmpty(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.getTaskByName("");
-    });
-}
-
-@Test
-@DisplayName("Null Priority wirft Exception")
-    void testTaskByPriorityNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.getTasksByPriority(null);
-    });
-}
-@Test
-@DisplayName("Task wurde erfolgreich bei Priority gefunden")
-    void testTaskByPriority(){
-    taskManager.addTask(testTask);
-   assertFalse(taskManager.getTasksByPriority(testTask.getPriority()).isEmpty());
-}
-
-@Test
-@DisplayName("Get by Date ")
-    void testTaskByDate(){
-    taskManager.addTask(testTask);
-    assertFalse(taskManager.getTasksByDate(testTask.getFalligkeit()).isEmpty());
-}
-@Test
-@DisplayName("Null Falligkeit wirft Exception")
-    void testTaskByFalligkeitNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.getTasksByDate(null);
-    });
-}
-
-
-@Test
-@DisplayName("Task in diesem Zeitraum wurde erfolgreich gefunden ")
-    void testTaskFromDateTo(){
-    taskManager.addTask(testTask);
-    assertFalse(taskManager.getTasksByDateFromTo
-            (testTask.getFalligkeit(),testTask.getFalligkeit()).isEmpty());
-
-}
-@Test
-@DisplayName("Null Datum wirft Exception")
-    void testTaskFromDateNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.getTasksByDateFromTo(null,null);
-    });
-}
-
-@Test
-@DisplayName("Kein Task in diesem Zeitraum")
-    void testTaskFromDate(){
-    taskManager.addTask(testTask);
-    assertTrue(taskManager.getTasksByDateFromTo(
-            LocalDate.of(2023,02,23),
-            LocalDate.of(2024,04,12)
-    ).isEmpty());
-}
-
-@Test
-@DisplayName("Offene Task wurde erfolgreich gefunden")
-   void testGetOffenTask(){
-    Task offenTask = new Task("Einkaufen",TaskType.HAUSHALT,
-            "Brot kaufen",Priority.MITTEL,
-            TaskStatus.OFFEN,LocalDate.of(2026,06,12));
-    taskManager.addTask(offenTask);
-    assertTrue(taskManager.getOffeneTasks().contains(offenTask));
-}
-@Test
-@DisplayName("IN_Bearbeirung Task wurde erfolggreich gefunden")
-    void testGetInBearbeirungTask(){
-    Task inBearbeuntgTask=new Task("Termin beim Arzt",TaskType.PRIVAT,
-            "Kompletter Check Up",Priority.HOCH,TaskStatus.IN_BEARBEITUNG,LocalDate.of(2026,06,12));
-}
-@Test
-    @DisplayName("Type wurde erfolgreich gefunden")
-    void testGetByType(){
-    taskManager.addTask(testTask);
-    assertTrue(taskManager.getTasksByPriority(testTask.getPriority()).contains(testTask));
-}
-@Test
-@DisplayName("Null Type wirft Exception ")
-void testGetByTypeNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.getTasksByPriority(null);
-    });
-}
-
-@Test
-@DisplayName("Status wurde erfolgreich gefunden")
-    void testGetByStatus(){
-    taskManager.addTask(testTask);
-    assertTrue(taskManager.getByStatus(testTask.getStatus()).contains(testTask));
-}
-@Test
-@DisplayName("Null Status wirft Exception")
-    void testGetByStatusNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.getByStatus(null);
-    });
-}
-@Test
-@DisplayName("Tasks Status wurde erfolgreich aktualisiert ")
-    void testUpdateTaskStatus() {
-    taskManager.addTask(testTask);
-    taskManager.updateStatus(testTask,TaskStatus.FERTIG);
-    assertEquals(TaskStatus.FERTIG, taskManager.getTaskByName("AS").getStatus());
-}
-@Test
-@DisplayName("Null Task wirft Exception")
-    void testUpdateTaskNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.updateStatus(null,TaskStatus.FERTIG);
-    });
-}
-@Test
-@DisplayName("Null Status wirft Exception")
-    void testUpdateStatusNull(){
-    assertThrows(IllegalArgumentException.class,()->{
-        taskManager.updateStatus(null,null);
-    });
-}
-@Test
-@DisplayName("Null Task und Null Status werfen Exception")
-    void testUpdateTaskNullNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.updateStatus(null, null);
-    });
-
-}
-
-@Test
-@DisplayName("Tasks Priority wurde erfolgreich aktualisiert ")
-    void testUpdateTaskPriority(){
-    taskManager.addTask(testTask);
-    taskManager.updatePriority(testTask,Priority.NIEDRIG);
-    assertEquals(Priority.NIEDRIG, testTask.getPriority());
-
-}
-@Test
-@DisplayName("Null Task und Null Priority werfen Exception")
-    void testUpdateTaskPriorityNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.updatePriority(null, null);
-    });
-}
-
-@Test
-@DisplayName("Null Task wirft Exception" )
-void testUpdateByTaskNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.updatePriority(null,Priority.NIEDRIG);
-    });
-}
-@Test
-@DisplayName("Null Priority wirft Exception")
-    void testUpdatePriorityNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.updatePriority(testTask, null);
-    });
-}
-@Test
-@DisplayName("Datum wurde erfolgreich aktualiesiert")
-    void testUpdateByDatum(){
-    taskManager.addTask(testTask);
-    taskManager.updateDate(testTask,LocalDate.of(2026,07,22));
-    Task task = taskManager.getTaskByName("AS");
-    assertEquals(LocalDate.of(2026,07,22),task.getFalligkeit());
-}
-@Test
-    @DisplayName("Null Datum wirft Exception")
-    void testUpdateByDatumNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.updateDate(testTask,null);
-    }) ;
-}
-@Test
+    @Test
     @DisplayName("Null Task wirft Exception")
-    void testUpdateByNullTask(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.updateDate(null,LocalDate.of(2026,07,22));
-    })   ;
-}
-@Test
-    @DisplayName("Null Datum und Null Task werfen Exception")
-    void testUpdateByNullDatumNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.updateDate(null,null);
-    });
-}
+    void testAddTaskNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.addTask(null);
+        });
+    }
 
-@Test
-@DisplayName("Task wurde erfolgreich by Name gefunden und Status wurde aktualisiert")
-    void testTaskbyNameandStatusUpdate(){
-    taskManager.addTask(testTask);
-    taskManager.getByNameAndUpdateStatus(testTask.getTaskName(),TaskStatus.OFFEN);
-    assertEquals(TaskStatus.OFFEN, taskManager.getTaskByName("AS").getStatus());
-}
+    @Test
+    @DisplayName("Get all Tasks ")
+    void testGetAllTasks() {
+        taskManager.addTask(testTask);
+        assertFalse(taskManager.getTasks().isEmpty());
+    }
 
-@Test
-    @DisplayName("Null Taskname wirft Exception")
-    void testUpdateTasknameNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.getByNameAndUpdateStatus(null,TaskStatus.OFFEN);
-    }) ;
-}
+    @Test
+    @DisplayName("Task wurde erfolgreich gefunden")
+    void testTaskByName() {
+        taskManager.addTask(testTask);
+        assertNotNull(taskManager.getTaskByName("AS"));
+    }
 
-@Test
+    @Test
+    @DisplayName("Null Name wirft Exception")
+    void testTaskByNameNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.addTask(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Leerer Name wirft Exception")
+    void testTaskByNameEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTaskByName("");
+        });
+    }
+
+    @Test
+    @DisplayName("Null Priority wirft Exception")
+    void testTaskByPriorityNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksByPriority(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Task wurde erfolgreich bei Priority gefunden")
+    void testTaskByPriority() {
+        taskManager.addTask(testTask);
+        assertFalse(taskManager.getTasksByPriority(testTask.getPriority()).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Get by Date ")
+    void testTaskByDate() {
+        taskManager.addTask(testTask);
+        assertFalse(taskManager.getTasksByDate(testTask.getFalligkeit()).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Null Falligkeit wirft Exception")
+    void testTaskByFalligkeitNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksByDate(null);
+        });
+    }
+
+
+    @Test
+    @DisplayName("Task in diesem Zeitraum wurde erfolgreich gefunden ")
+    void testTaskFromDateTo() {
+        taskManager.addTask(testTask);
+        assertFalse(taskManager.getTasksByDateFromTo
+                (testTask.getFalligkeit(), testTask.getFalligkeit()).isEmpty());
+
+    }
+
+    @Test
+    @DisplayName("Null Datum wirft Exception")
+    void testTaskFromDateNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksByDateFromTo(null, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Kein Task in diesem Zeitraum")
+    void testTaskFromDate() {
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasksByDateFromTo(
+                LocalDate.of(2023, 02, 23),
+                LocalDate.of(2024, 04, 12)
+        ).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Offene Task wurde erfolgreich gefunden")
+    void testGetOffenTask() {
+        Task offenTask = new Task("Einkaufen", TaskType.HAUSHALT,
+                "Brot kaufen", Priority.MITTEL,
+                TaskStatus.OFFEN, LocalDate.of(2026, 06, 12));
+        taskManager.addTask(offenTask);
+        assertTrue(taskManager.getOffeneTasks().contains(offenTask));
+    }
+
+    @Test
+    @DisplayName("IN_Bearbeirung Task wurde erfolggreich gefunden")
+    void testGetInBearbeirungTask() {
+        Task inBearbeuntgTask = new Task("Termin beim Arzt", TaskType.PRIVAT,
+                "Kompletter Check Up", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026, 06, 12));
+    }
+
+    @Test
+    @DisplayName("Type wurde erfolgreich gefunden")
+    void testGetByType() {
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasksByPriority(testTask.getPriority()).contains(testTask));
+    }
+
+    @Test
+    @DisplayName("Null Type wirft Exception ")
+    void testGetByTypeNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksByPriority(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Status wurde erfolgreich gefunden")
+    void testGetByStatus() {
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getByStatus(testTask.getStatus()).contains(testTask));
+    }
+
+    @Test
     @DisplayName("Null Status wirft Exception")
-    void testUpdateTaskStatusNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.getByNameAndUpdateStatus("AS",null);
-    });
-}
+    void testGetByStatusNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getByStatus(null);
+        });
+    }
 
-@Test
-@DisplayName("Null Taskname und Null Status werfen Exception")
-    void testUpdateNullNameandNullStatus(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.getByNameAndUpdateStatus(null,null);
-    })    ;
-}
+    @Test
+    @DisplayName("Tasks Status wurde erfolgreich aktualisiert ")
+    void testUpdateTaskStatus() {
+        taskManager.addTask(testTask);
+        taskManager.updateStatus(testTask, TaskStatus.FERTIG);
+        assertEquals(TaskStatus.FERTIG, taskManager.getTaskByName("AS").getStatus());
+    }
+
+    @Test
+    @DisplayName("Null Task wirft Exception")
+    void testUpdateTaskNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updateStatus(null, TaskStatus.FERTIG);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Status wirft Exception")
+    void testUpdateStatusNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updateStatus(null, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Task und Null Status werfen Exception")
+    void testUpdateTaskNullNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updateStatus(null, null);
+        });
+
+    }
+
+    @Test
+    @DisplayName("Tasks Priority wurde erfolgreich aktualisiert ")
+    void testUpdateTaskPriority() {
+        taskManager.addTask(testTask);
+        taskManager.updatePriority(testTask, Priority.NIEDRIG);
+        assertEquals(Priority.NIEDRIG, testTask.getPriority());
+
+    }
+
+    @Test
+    @DisplayName("Null Task und Null Priority werfen Exception")
+    void testUpdateTaskPriorityNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updatePriority(null, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Task wirft Exception")
+    void testUpdateByTaskNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updatePriority(null, Priority.NIEDRIG);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Priority wirft Exception")
+    void testUpdatePriorityNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updatePriority(testTask, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Datum wurde erfolgreich aktualiesiert")
+    void testUpdateByDatum() {
+        taskManager.addTask(testTask);
+        taskManager.updateDate(testTask, LocalDate.of(2026, 07, 22));
+        Task task = taskManager.getTaskByName("AS");
+        assertEquals(LocalDate.of(2026, 07, 22), task.getFalligkeit());
+    }
+
+    @Test
+    @DisplayName("Null Datum wirft Exception")
+    void testUpdateByDatumNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updateDate(testTask, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Task wirft Exception")
+    void testUpdateByNullTask() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updateDate(null, LocalDate.of(2026, 07, 22));
+        });
+    }
+
+    @Test
+    @DisplayName("Null Datum und Null Task werfen Exception")
+    void testUpdateByNullDatumNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updateDate(null, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Task wurde erfolgreich by Name gefunden und Status wurde aktualisiert")
+    void testTaskbyNameandStatusUpdate() {
+        taskManager.addTask(testTask);
+        taskManager.getByNameAndUpdateStatus(testTask.getTaskName(), TaskStatus.OFFEN);
+        assertEquals(TaskStatus.OFFEN, taskManager.getTaskByName("AS").getStatus());
+    }
+
+    @Test
+    @DisplayName("Null Taskname wirft Exception")
+    void testUpdateTasknameNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getByNameAndUpdateStatus(null, TaskStatus.OFFEN);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Status wirft Exception")
+    void testUpdateTaskStatusNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getByNameAndUpdateStatus("AS", null);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Taskname und Null Status werfen Exception")
+    void testUpdateNullNameandNullStatus() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getByNameAndUpdateStatus(null, null);
+        });
+    }
+
     @Test
     @DisplayName("Task wurde erfolgreich gelöscht")
-    void testDeleteTask (){
-    taskManager.addTask(testTask);
-    taskManager.deleteTask(testTask);
-    assertFalse(taskManager.getTasks().contains(testTask));
+    void testDeleteTask() {
+        taskManager.addTask(testTask);
+        taskManager.deleteTask(testTask);
+        assertFalse(taskManager.getTasks().contains(testTask));
     }
 
     @Test
     @DisplayName("Null Task wirft Exception")
-    void testDeleteTaskNull(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.deleteTask(null);
-    });
+    void testDeleteTaskNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.deleteTask(null);
+        });
     }
 
-      @Test
-    @DisplayName("Task wurde by Name gefunden und erfolgreich geloscht")
-    void testDeleteTaskByTaskName(){
-    taskManager.addTask(testTask);
-    taskManager.deleteTaskByName("AS");
-     assertNull(taskManager.getTaskByName("AS"));
-}
-
-@Test
-    @DisplayName("Null Name wirft Exception")
-    void testDeleteTaskNullName(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.deleteTask(null);
-    })    ;
-}
-@Test
-    @DisplayName("Task wurde erfolgreich by Priority geloscht")
-    void testDeleteTaskByPriority(){
-    taskManager.addTask(testTask);
-    taskManager.deleteByPriority(testTask.getPriority());
-    assertTrue(taskManager.getTasksByPriority(Priority.HOCH).isEmpty());
-}
-
-@Test
-    @DisplayName("Null Priority wirft Exception")
-    void testDeleteTaskNullPriority(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.deleteTask(null);
-    }) ;
-}
-
-@Test
-    @DisplayName("Task wurde  by Status gefunden und erfolgreich geloscht")
-    void testDeleteTaskByStatus(){
-    taskManager.addTask(testTask);
-    taskManager.deleteByStatus(TaskStatus.OFFEN);
-    assertTrue(taskManager.getByStatus(TaskStatus.OFFEN).isEmpty());
-}
     @Test
-    @DisplayName("Nyll Status wirft Exception")
-    void testDeleteTaskNullStatus(){
-    assertThrows(IllegalArgumentException.class, () -> {
-        taskManager.deleteTask(null);
-    })  ;
+    @DisplayName("Task wurde by Name gefunden und erfolgreich geloscht")
+    void testDeleteTaskByTaskName() {
+        taskManager.addTask(testTask);
+        taskManager.deleteTaskByName("AS");
+        assertNull(taskManager.getTaskByName("AS"));
     }
 
+    @Test
+    @DisplayName("Null Name wirft Exception")
+    void testDeleteTaskNullName() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.deleteTask(null);
+        });
+    }
 
+    @Test
+    @DisplayName("Task wurde erfolgreich by Priority geloscht")
+    void testDeleteTaskByPriority() {
+        taskManager.addTask(testTask);
+        taskManager.deleteByPriority(testTask.getPriority());
+        assertTrue(taskManager.getTasksByPriority(Priority.HOCH).isEmpty());
+    }
 
+    @Test
+    @DisplayName("Null Priority wirft Exception")
+    void testDeleteTaskNullPriority() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.deleteTask(null);
+        });
+    }
 
+    @Test
+    @DisplayName("Task wurde  by Status gefunden und erfolgreich geloscht")
+    void testDeleteTaskByStatus() {
+        taskManager.addTask(testTask);
+        taskManager.deleteByStatus(TaskStatus.OFFEN);
+        assertTrue(taskManager.getByStatus(TaskStatus.OFFEN).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Null Status wirft Exception")
+    void testDeleteTaskNullStatus() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.deleteTask(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Offene Tasks wurden erfolgreich mit gewunschter Priority gefunden")
+    void testGetOffeneTasksByPriority() {
+        Task task = new Task("ISDA", TaskType.STUDIUM, "Hausaufgabe 2", Priority.HOCH, TaskStatus.OFFEN, LocalDate.of(2026, 06, 12));
+
+        taskManager.addTask(task);
+        assertTrue(taskManager.getOffeneTasksByPriority(Priority.HOCH).contains(task));
+
+    }
+
+    @Test
+    @DisplayName("Null Priority wirft Exception")
+    void testGetOffeneTaskNullPriority() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getOffeneTasksByPriority(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Get Tasks by Type and by Status")
+    void testGetTasksByTypeAndStatus() {
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasksByTypeAndStatus(TaskType.STUDIUM, TaskStatus.IN_BEARBEITUNG).contains(testTask));
+    }
+
+    @Test
+    @DisplayName("Null Task Type und Status werfen Exception")
+    void testGetTaskNullTypeAndStatus() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksByTypeAndStatus(null, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Type wirft Exception")
+    void testGetTaskNullType() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksByTypeAndStatus(null, TaskStatus.IN_BEARBEITUNG);
+        });
+    }
+
+    @Test
+    @DisplayName("Null Status wirft Exception")
+    void testGetTaskNullStatus() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksByTypeAndStatus(TaskType.STUDIUM, null);
+        });
+    }
+
+@Test
+    @DisplayName("Uberfallige Aufgaben wurden erfolgreich gefunden")
+    void testUberfalligeTaks(){
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getUberfalligeTasks().contains(testTask));
+}
+
+@Test
+    @DisplayName("Tasks fur diese Woche wurden erfolgreich gefunden")
+    void testTaskDieserWoche(){
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasksOfWeek().contains(testTask));
+}
+@Test
+    @DisplayName("Tasks by Type und by Priority wurden erfolgreich gefunden")
+    void testGetTasksByTypeAndByPriority(){
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasksbyTypeAndPriority(TaskType.STUDIUM,Priority.HOCH).contains(testTask));
+
+}
+@Test
+    @DisplayName("Null Type und Null Priority werfen Exception")
+    void testGetTaskNullTypeAndNullPriority(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.getTasksbyTypeAndPriority(null,null);
+        });
+}
 }
