@@ -14,7 +14,7 @@ public class TestTaskManager {
     @BeforeEach
     public void setUp() {
         taskManager = new TaskManager();
-        testTask = new Task("AS", TaskType.STUDIUM, "Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026, 05, 27));
+        testTask = new Task("AS", TaskType.STUDIUM, "Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026, 05, 29));
     }
 
     @Test
@@ -421,7 +421,6 @@ public class TestTaskManager {
 @Test
     @DisplayName("Tasks fur diese Woche wurden erfolgreich gefunden")
     void testTaskDieserWoche(){
-        taskManager.addTask(testTask);
         assertTrue(taskManager.getTasksOfWeek().contains(testTask));
 }
 @Test
@@ -438,4 +437,13 @@ public class TestTaskManager {
             taskManager.getTasksbyTypeAndPriority(null,null);
         });
 }
+
+
+@Test
+    @DisplayName("Task wurde als erledigt markieren")
+    void testTaskAlsErledigtMarkieren(){
+        taskManager.taskAlsErledingtMarkieren("AS");
+        assertEquals(TaskStatus.FERTIG,taskManager.getTaskByName("AS").getStatus());
+}
+
 }

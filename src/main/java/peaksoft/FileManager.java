@@ -60,4 +60,19 @@ public class FileManager {
         log.info("Task wurde erfolgreich gespeichert");
     }
 
+    public List<String>motivationLaden(){
+        List<String>satze=new ArrayList<>();
+        try(BufferedReader reader=new BufferedReader(new FileReader("motivation.txt"))){
+            String line;
+            while((line= reader.readLine())!=null){
+                satze.add(line);
+            }
+            log.info("Motivation wurde erfolgreich geladen");
+
+        }
+        catch(IOException e){
+            log.error("Fehler beim Speichern aufgetreten");
+        }
+        return satze;
+    }
 }

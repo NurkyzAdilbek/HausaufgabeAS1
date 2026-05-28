@@ -6,7 +6,9 @@ import peaksoft.FileManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 
@@ -263,6 +265,30 @@ public List<Task>getTasksbyTypeAndPriority(TaskType type,Priority priority){
         }
         return ergebnis;
 }
+public String getMotivation(){
+        List<String>satze=fileManager.motivationLaden();
+        if(satze.isEmpty()){
+            return "Super gemacht";
+        }
+        Random random=new Random();
+        int zufall=random.nextInt(satze.size());
+        return satze.get(zufall);
+}
+
+public void taskAlsErledingtMarkieren(String taskname){
+        Task task=getTaskByName(taskname);
+        if (task!=null){
+            task.setStatus(TaskStatus.FERTIG);
+            fileManager.taskSpeichern(this.tasks);
+            log.info("Task "+taskname+ " als Fertig erledigt markiert");
+            System.out.println("Aufgabe erledingt!");
+            System.out.println(getMotivation());
+        }
+        else {
+            log.warn("Task "+taskname+" nicht gefunden");
+            System.out.println("Aufgabe mit Name"+taskname+ " wurde nicht gefunden");
+        }
+}
     //UPDATE METHODS
     public void updateStatus(Task gtask, TaskStatus newStatus) {
         if(gtask==null||newStatus==null){
@@ -403,5 +429,46 @@ public void deleteByStatus(TaskStatus status){
             log.warn(" Task "+status+" nicht gefunden");
         }
 }
+
+//Statistik
+    public List<Task>sortierenNachFalligkeit(){
+        List<Task>sortierteTasks=new ArrayList<>(this.tasks);
+        sortierteTasks.sort(Comparator.comparing(Task::getFalligkeit));
+        log.info("Ergolgreich sortiert");
+return sortierteTasks;
+    }
+    public List<Task>sortierenNachStatus(){
+        List<Task>sortierteTasks=new ArrayList<>(this.tasks);
+        sortierteTasks.sort(Comparator.comparing(Task::getStatus));
+        log.info("Ergolgreich sortiert");
+        return sortierteTasks;
+    }
+
+    public List<Task>sortierenNachPriority(){
+        List<Task>sortierteTasks=new ArrayList<>(this.tasks);
+        sortierteTasks.sort(Comparator.comparing(Task::getPriority));
+        log.info("Ergolgreich sortiert");
+        return sortierteTasks;
+    }
+
+    public List<Task>sortierenNachDAtumUndPriority(){
+        List<Task>sortierteTasks=new ArrayList<>(this.tasks);
+        sortierteTasks.sort(Comparator.comparing(Task::getFalligkeit).thenComparing(Task::getPriority));
+        log.info("Ergolgreich sortiert");
+        return sortierteTasks;
+    }
+
+    public List<Task>erledigteAufgaben(){
+        List<Task>erledigteTasks=new ArrayList<>();
+        for(Task task:this.tasks){
+            if (task.getStatus().equals(TaskStatus.FERTIG)){
+                erledigteTasks.add(task);
+            }
+        }
+       // log.info("Ergolgreich sortiert");
+        return  erledigteTasks;
+    }
+
+
 
 }

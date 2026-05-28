@@ -35,7 +35,15 @@ TaskManager taskManager = new TaskManager();
       //
         //taskManager.deleteTaskByName(" Bewerbungsgesprach ");
 for (Task t:taskManager.getTasksByTypeAndStatus(TaskType.STUDIUM, TaskStatus.OFFEN)) {
-    System.out.println(t);
+   // System.out.println(t);
 }
+       for (Task task1:taskManager.sortierenNachPriority()){
+              // System.out.println(task1);
+       }
+      //  System.out.println(taskManager.getMotivation());
+
+        for (Task task1:taskManager.getTasksOfWeek()){
+            System.out.println(task1);
+        }
     }
 }

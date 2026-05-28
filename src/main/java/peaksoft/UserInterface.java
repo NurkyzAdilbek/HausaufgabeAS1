@@ -28,6 +28,7 @@ public class UserInterface {
            System.out.println("3. Aufgaben suchen");
            System.out.println("4. Aufgabe aktualisieren");
            System.out.println("5. Aufgabe loschen");
+           System.out.println("6.Statistik anzeigen");
            System.out.println("0. Beenden");
            int wahlen=scanner.nextInt();
            switch (wahlen) {
