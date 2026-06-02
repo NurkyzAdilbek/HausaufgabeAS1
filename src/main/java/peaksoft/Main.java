@@ -17,10 +17,10 @@ TaskManager taskManager = new TaskManager();
         Task task4 = new Task(" Bewerbungsgesprach ",TaskType.SONSTIGES,"Vorbereitung auf neuen Job", Priority.NIEDRIG, TaskStatus.FERTIG, LocalDate.of(2026,9,12));
         //Task task5 = new Task(" AS ",TaskType.STUDIUM,"Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026,06,12));
       //  Task task6 = new Task(" AS ",TaskType.STUDIUM,"Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026,06,12));
-//  taskManager.addTask(task);
-// taskManager.addTask(task2);
-//taskManager.addTask(task3);
-//taskManager.addTask(task4);
+  taskManager.addTask(task);
+ taskManager.addTask(task2);
+taskManager.addTask(task3);
+taskManager.addTask(task4);
 
        // taskManager.deleteTaskByName("AS");
 
@@ -42,8 +42,14 @@ for (Task t:taskManager.getTasksByTypeAndStatus(TaskType.STUDIUM, TaskStatus.OFF
        }
       //  System.out.println(taskManager.getMotivation());
 
-        for (Task task1:taskManager.getTasksOfWeek()){
-            System.out.println(task1);
+        for (Task task1:taskManager.sortierenNachFalligkeit()){
+           // System.out.println(task1);
         }
+        UserInterface userInterface=new UserInterface();
+    userInterface.start();
+
+       for (Task task1:taskManager.sortierenNachStatus()){
+         //  System.out.println(task1.getStatus());
+       }
     }
 }

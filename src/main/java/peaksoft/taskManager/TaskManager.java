@@ -33,11 +33,9 @@ public class TaskManager {
     }
 
     //GET METHODS
-
     public List<Task> getTasks() {
         return this.tasks;
     }
-
     public Task getTaskByName(String name) {
         if (name==null||name.isEmpty()){
             throw new IllegalArgumentException("Name ist null oder leer");
@@ -50,7 +48,6 @@ public class TaskManager {
       log.warn(" Kein Task mit Name "+name+" gefunden");
         return null;
     }
-
     public List<Task> getTasksByPriority(Priority priority) {
         if (priority==null){
             throw new IllegalArgumentException("Priority is null");
@@ -69,7 +66,7 @@ public class TaskManager {
         }
         return ergebnis;
     }
-public List<Task> getTasksByDate(LocalDate date) {
+    public List<Task> getTasksByDate(LocalDate date) {
         if (date==null){
             throw new IllegalArgumentException("Date is null");
         }
@@ -87,7 +84,6 @@ public List<Task> getTasksByDate(LocalDate date) {
         }
         return ergebnis;
 }
-
     public List<Task> getTasksByDateFromTo(LocalDate from, LocalDate to ) {
         if (from==null||to==null){
             throw new IllegalArgumentException("From and To are null");
@@ -107,7 +103,6 @@ public List<Task> getTasksByDate(LocalDate date) {
         }
         return ergebnis;
     }
-
     public List<Task>getOffeneTasks(){
         List<Task>ergebnis=new ArrayList<>();
         for (Task task:this.tasks) {
@@ -136,7 +131,7 @@ public List<Task> getTasksByDate(LocalDate date) {
         log.info("Tasks wurden erfolgleich gefunden");}
         return ergebnis;
     }
-public List<Task> getTasksByType(TaskType type){
+    public List<Task> getTasksByType(TaskType type){
         if (type==null){
             throw new IllegalArgumentException("Type is null");
         }
@@ -154,8 +149,7 @@ public List<Task> getTasksByType(TaskType type){
         }
         return ergebnis;
 }
-
-public List<Task>getByStatus(TaskStatus status){
+    public List<Task>getByStatus(TaskStatus status){
         if (status==null){
             throw new IllegalArgumentException("Status is null");
         }
@@ -174,8 +168,7 @@ public List<Task>getByStatus(TaskStatus status){
 
         return ergebnis;
 }
-
-public List<Task>getOffeneTasksByPriority(Priority priority){
+    public List<Task>getOffeneTasksByPriority(Priority priority){
         if (priority==null){
             throw new IllegalArgumentException("Priority is null");
         }
@@ -194,8 +187,7 @@ public List<Task>getOffeneTasksByPriority(Priority priority){
         return  ergebnis;
 
 }
-
-public List<Task>getTasksByTypeAndStatus(TaskType type,TaskStatus status){
+    public List<Task>getTasksByTypeAndStatus(TaskType type,TaskStatus status){
         if (type==null||status==null){
             throw new IllegalArgumentException("Type and status are null");
         }
@@ -213,7 +205,7 @@ public List<Task>getTasksByTypeAndStatus(TaskType type,TaskStatus status){
         }
         return ergebnis;
 }
-public List<Task>getUberfalligeTasks(){
+    public List<Task>getUberfalligeTasks(){
         List<Task>ergebnis=new ArrayList<>();
         for (Task task:this.tasks) {
             if (task.getFalligkeit().isBefore(LocalDate.now())){
@@ -228,7 +220,7 @@ public List<Task>getUberfalligeTasks(){
         }
         return ergebnis;
 }
-public List<Task> getTasksOfWeek(){
+    public List<Task> getTasksOfWeek(){
 
         List<Task>ergebnis=new ArrayList<>();
         LocalDate date=LocalDate.now();
@@ -246,7 +238,7 @@ public List<Task> getTasksOfWeek(){
         }
         return  ergebnis;
 }
-public List<Task>getTasksbyTypeAndPriority(TaskType type,Priority priority){
+    public List<Task>getTasksbyTypeAndPriority(TaskType type,Priority priority){
         if (type==null||priority==null){
             throw new IllegalArgumentException("Type and priority are null");
         }
@@ -265,7 +257,7 @@ public List<Task>getTasksbyTypeAndPriority(TaskType type,Priority priority){
         }
         return ergebnis;
 }
-public String getMotivation(){
+    public String getMotivation(){
         List<String>satze=fileManager.motivationLaden();
         if(satze.isEmpty()){
             return "Super gemacht";
@@ -274,8 +266,7 @@ public String getMotivation(){
         int zufall=random.nextInt(satze.size());
         return satze.get(zufall);
 }
-
-public void taskAlsErledingtMarkieren(String taskname){
+    public void taskAlsErledingtMarkieren(String taskname){
         Task task=getTaskByName(taskname);
         if (task!=null){
             task.setStatus(TaskStatus.FERTIG);
@@ -309,8 +300,7 @@ public void taskAlsErledingtMarkieren(String taskname){
             log.warn(" Task "+gtask.getTaskName()+ " nicht gefunden");
         }
     }
-
-public void updatePriority(Task gtask, Priority newPriority) {
+    public void updatePriority(Task gtask, Priority newPriority) {
        if(gtask==null||newPriority==null){
            throw new IllegalArgumentException("Eingaben durfen nicht null sein");
        }
@@ -329,8 +319,7 @@ public void updatePriority(Task gtask, Priority newPriority) {
             log.warn(" Task "+gtask.getTaskName()+ " nicht gefunden");
         }
         }
-
-public void updateDate(Task gtask, LocalDate newDate) {
+    public void updateDate(Task gtask, LocalDate newDate) {
        if (gtask==null||newDate==null){
            throw new IllegalArgumentException("Task der Date darf nicht null sein");
        }
@@ -344,8 +333,7 @@ public void updateDate(Task gtask, LocalDate newDate) {
             log.warn(" Task "+gtask.getTaskName()+ " nicht gefunden");
         }
         }
-
-public void getByNameAndUpdateStatus(String taskName, TaskStatus newStatus) {
+    public void getByNameAndUpdateStatus(String taskName, TaskStatus newStatus) {
        if (taskName==null|| taskName.isEmpty()||newStatus==null){
            throw new IllegalArgumentException("Name darf nicht leer sein");
        }
@@ -381,8 +369,6 @@ public void getByNameAndUpdateStatus(String taskName, TaskStatus newStatus) {
             log.warn(" Task "+gtask.getTaskName()+ " nicht gefunden");
         }
         }
-
-
     public void deleteTaskByName(String taskName) {
         if (taskName==null||taskName.isEmpty()){
             throw new IllegalArgumentException("Eingabe darf nicht leer sein");
@@ -398,7 +384,7 @@ public void getByNameAndUpdateStatus(String taskName, TaskStatus newStatus) {
             log.warn(" Task "+taskName+" nicht gefunden");
         }
     }
-public void deleteByPriority(Priority priority){
+   public void deleteByPriority(Priority priority){
     if (priority==null){
         throw new IllegalArgumentException("Eingabe darf nicht leer sein");
     }
@@ -413,8 +399,7 @@ public void deleteByPriority(Priority priority){
             log.warn(" Task "+priority+" nicht gefunden");
         }
 }
-
-public void deleteByStatus(TaskStatus status){
+   public void deleteByStatus(TaskStatus status){
         if(status==null){
             throw new IllegalArgumentException("Eingabe darf nicht leer sein");
         }
@@ -443,21 +428,18 @@ return sortierteTasks;
         log.info("Ergolgreich sortiert");
         return sortierteTasks;
     }
-
     public List<Task>sortierenNachPriority(){
         List<Task>sortierteTasks=new ArrayList<>(this.tasks);
         sortierteTasks.sort(Comparator.comparing(Task::getPriority));
         log.info("Ergolgreich sortiert");
         return sortierteTasks;
     }
-
     public List<Task>sortierenNachDAtumUndPriority(){
         List<Task>sortierteTasks=new ArrayList<>(this.tasks);
         sortierteTasks.sort(Comparator.comparing(Task::getFalligkeit).thenComparing(Task::getPriority));
         log.info("Ergolgreich sortiert");
         return sortierteTasks;
     }
-
     public List<Task>erledigteAufgaben(){
         List<Task>erledigteTasks=new ArrayList<>();
         for(Task task:this.tasks){
@@ -468,7 +450,23 @@ return sortierteTasks;
        // log.info("Ergolgreich sortiert");
         return  erledigteTasks;
     }
-
-
+    public int getAnzahlOffeneTasks(){
+        int counter=0;
+        for (Task task:this.tasks){
+            if (task.getStatus().equals(TaskStatus.OFFEN)){
+                counter++;
+            }
+        }
+        return counter;
+}
+    public int getAnzahlErledingteAufgabe(){
+        int counter=0;
+        for (Task task:this.tasks){
+            if (task.getStatus().equals(TaskStatus.FERTIG)){
+                counter++;
+            }
+        }
+        return counter;
+}
 
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import peaksoft.taskManager.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
+import java.util.List;
 
 public class TestTaskManager {
     private TaskManager taskManager;
@@ -14,7 +15,16 @@ public class TestTaskManager {
     @BeforeEach
     public void setUp() {
         taskManager = new TaskManager();
-        testTask = new Task("AS", TaskType.STUDIUM, "Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.of(2026, 05, 29));
+        testTask = new Task("AS", TaskType.STUDIUM, "Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.now().plusDays(1));
+    }
+    @AfterEach
+    void tearDown(){
+        try {
+            new java.io.FileWriter("todo.txt",false).close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -414,13 +424,15 @@ public class TestTaskManager {
 @Test
     @DisplayName("Uberfallige Aufgaben wurden erfolgreich gefunden")
     void testUberfalligeTaks(){
-        taskManager.addTask(testTask);
-        assertTrue(taskManager.getUberfalligeTasks().contains(testTask));
+    Task task=new Task("AS",TaskType.STUDIUM,"Hausaufgabe 1",Priority.HOCH,TaskStatus.IN_BEARBEITUNG,LocalDate.now().minusDays(3));
+    taskManager.addTask(task);
+        assertTrue(taskManager.getUberfalligeTasks().contains(task));
 }
 
 @Test
     @DisplayName("Tasks fur diese Woche wurden erfolgreich gefunden")
     void testTaskDieserWoche(){
+        taskManager.addTask(testTask);
         assertTrue(taskManager.getTasksOfWeek().contains(testTask));
 }
 @Test
@@ -442,8 +454,120 @@ public class TestTaskManager {
 @Test
     @DisplayName("Task wurde als erledigt markieren")
     void testTaskAlsErledigtMarkieren(){
+        Task task=new Task("AS",TaskType.STUDIUM,"Hausaufgabe 2",Priority.HOCH,TaskStatus.IN_BEARBEITUNG,LocalDate.now().plusDays(4));
+        taskManager.addTask(task);
         taskManager.taskAlsErledingtMarkieren("AS");
         assertEquals(TaskStatus.FERTIG,taskManager.getTaskByName("AS").getStatus());
 }
+@Test
+    void testGetMotivation(){
+        String satz=taskManager.getMotivation();
+        assertNotNull(satz);
+        assertFalse(satz.isEmpty());
+}
 
+@Test
+    void testTaskAlsErledingtMarkieren(){
+    Task task=new Task("AS",TaskType.STUDIUM,"Hausaufgabe 2",Priority.HOCH,TaskStatus.IN_BEARBEITUNG,LocalDate.now().plusDays(4));
+    taskManager.addTask(task);
+        taskManager.taskAlsErledingtMarkieren("AS");
+        assertEquals(TaskStatus.FERTIG,taskManager.getTaskByName("AS").getStatus());
+}
+@Test
+    void testTaskAlsErledingtMarkierenByNullName(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.taskAlsErledingtMarkieren(null);
+        });
+}
+@Test
+    @DisplayName("Testen sortieren nach Falligkeit")
+    void testSortierenNachFalligkeit(){
+        Task task1=new Task("Hausaufgabe 3",TaskType.STUDIUM,"Hausaufgabe 3",Priority.HOCH ,TaskStatus.OFFEN, LocalDate.of(2026, 06, 12));
+        Task task2=new Task("Hausaufgabe 4",TaskType.STUDIUM,"Hausaufgabe 4",Priority.MITTEL ,TaskStatus.OFFEN, LocalDate.of(2026, 06, 24));
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        List<Task> sortierteT=taskManager.sortierenNachFalligkeit();
+        assertEquals(LocalDate.of(2026, 06, 12),sortierteT.get(0).getFalligkeit());
+}
+
+
+@Test
+    @DisplayName("Testen sortieren nach Status")
+    void testSortierenNachStatus(){
+    Task task1=new Task("Hausaufgabe 3",TaskType.STUDIUM,"Hausaufgabe 3",Priority.HOCH ,TaskStatus.FERTIG, LocalDate.of(2026, 06, 12));
+    Task task2=new Task("Hausaufgabe 4",TaskType.STUDIUM,"Hausaufgabe 4",Priority.MITTEL ,TaskStatus.OFFEN, LocalDate.of(2026, 06, 24));
+    taskManager.addTask(task1);
+    taskManager.addTask(task2);
+    List<Task> sortierteT=taskManager.sortierenNachStatus();
+    assertEquals(TaskStatus.OFFEN,sortierteT.get(0).getStatus());
+
+}
+
+@Test
+    @DisplayName("Test Sortieren nach Priority")
+    void testSortierenNachPriority(){
+    Task task1=new Task("Hausaufgabe 3",TaskType.STUDIUM,"Hausaufgabe 3",Priority.HOCH ,TaskStatus.FERTIG, LocalDate.of(2026, 06, 12));
+    Task task2=new Task("Hausaufgabe 4",TaskType.STUDIUM,"Hausaufgabe 4",Priority.MITTEL ,TaskStatus.OFFEN, LocalDate.of(2026, 06, 24));
+    taskManager.addTask(task1);
+    taskManager.addTask(task2);
+    List<Task>sortierteT=taskManager.sortierenNachPriority();
+    assertEquals(Priority.HOCH,sortierteT.get(0).getPriority());
+}
+
+@Test
+    @DisplayName("Test Sortieren nach Datum und Priority")
+    void testSortierenNachDatumundPriority(){
+    Task task1=new Task("Hausaufgabe 3",TaskType.STUDIUM,"Hausaufgabe 3",Priority.HOCH ,TaskStatus.FERTIG, LocalDate.of(2026, 06, 12));
+    Task task2=new Task("Hausaufgabe 4",TaskType.STUDIUM,"Hausaufgabe 4",Priority.MITTEL ,TaskStatus.OFFEN, LocalDate.of(2026, 06, 24));
+    taskManager.addTask(task1);
+    taskManager.addTask(task2);
+    List<Task>sortierte=taskManager.sortierenNachDAtumUndPriority();
+    assertEquals(LocalDate.of(2026, 06, 12), sortierte.get(0).getFalligkeit() );
+    assertEquals(Priority.HOCH,sortierte.get(0).getPriority());
+
+}
+
+@Test
+    @DisplayName("Test erledingte AUfgabe")
+    void testErledingteAUfgabe(){
+        Task task1=new Task("Vorleistung 2",TaskType.STUDIUM,"SQL DML",Priority.HOCH,TaskStatus.FERTIG, LocalDate.of(2026, 05, 12));
+taskManager.addTask(task1);
+  assertTrue(taskManager.erledigteAufgaben().contains(task1));
+    }
+
+
+    @Test
+    @DisplayName("Test Get Anzahl erledingte Aufgaben")
+    void testAnzahlErl(){
+        Task task1=new Task("Vorleistung 2",TaskType.STUDIUM,"SQL DML",Priority.HOCH,TaskStatus.FERTIG, LocalDate.of(2026, 05, 12));
+        Task task2=new Task("Vorleistung 2",TaskType.STUDIUM,"SQL DML",Priority.HOCH,TaskStatus.FERTIG, LocalDate.of(2026, 05, 12));
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        assertEquals(2,taskManager.getAnzahlErledingteAufgabe());
+
+    }
+
+    @Test
+    @DisplayName("Test Get Anzahl offene Aufgaben")
+    void testAnzahlOffen(){
+        Task task1=new Task("Vorleistung 2",TaskType.STUDIUM,"SQL DML",Priority.HOCH,TaskStatus.OFFEN, LocalDate.of(2026, 05, 12));
+        Task task2=new Task("Vorleistung 2",TaskType.STUDIUM,"SQL DML",Priority.HOCH,TaskStatus.OFFEN, LocalDate.of(2026, 05, 12));
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        assertEquals(2,taskManager.getAnzahlOffeneTasks());
+    }
+
+    @Test
+    @DisplayName("Test Get Task In_Bearbeitung")
+    void testGetTinBearbeitung(){
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasksIN_Bearbeitung().contains(testTask));
+    }
+
+    @Test
+    @DisplayName("Test Get Task by Type")
+    void testGetTaskByPriority(){
+        taskManager.addTask(testTask);
+        assertTrue(taskManager.getTasksByType(TaskType.STUDIUM).contains(testTask));
+    }
 }
