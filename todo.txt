@@ -1,20 +1,4 @@
-AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12
-putzen|HAUSHALT|punzen and Mull rausbringen|NIEDRIG|OFFEN|2026-06-01
- ISDA |STUDIUM|Vorleistung: Datenbankerstellung|HOCH|OFFEN|2026-05-20
- Bewerbungsgesprach |SONSTIGES|Vorbereitung auf neuen Job|NIEDRIG|FERTIG|2026-09-12
-AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12
-putzen|HAUSHALT|punzen and Mull rausbringen|NIEDRIG|OFFEN|2026-06-01
- ISDA |STUDIUM|Vorleistung: Datenbankerstellung|HOCH|OFFEN|2026-05-20
- Bewerbungsgesprach |SONSTIGES|Vorbereitung auf neuen Job|NIEDRIG|FERTIG|2026-09-12
-AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12
-putzen|HAUSHALT|punzen and Mull rausbringen|NIEDRIG|OFFEN|2026-06-01
- ISDA |STUDIUM|Vorleistung: Datenbankerstellung|HOCH|OFFEN|2026-05-20
- Bewerbungsgesprach |SONSTIGES|Vorbereitung auf neuen Job|NIEDRIG|FERTIG|2026-09-12
-AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12
-putzen|HAUSHALT|punzen and Mull rausbringen|NIEDRIG|OFFEN|2026-06-01
- ISDA |STUDIUM|Vorleistung: Datenbankerstellung|HOCH|OFFEN|2026-05-20
- Bewerbungsgesprach |SONSTIGES|Vorbereitung auf neuen Job|NIEDRIG|FERTIG|2026-09-12
-AS|STUDIUM|Hausaufgabe 1|HOCH|IN_BEARBEITUNG|2026-06-12
-putzen|HAUSHALT|punzen and Mull rausbringen|NIEDRIG|OFFEN|2026-06-01
- ISDA |STUDIUM|Vorleistung: Datenbankerstellung|HOCH|OFFEN|2026-05-20
- Bewerbungsgesprach |SONSTIGES|Vorbereitung auf neuen Job|NIEDRIG|FERTIG|2026-09-12
+Statistik I|STUDIUM|Tutorium 5|NIEDRIG|OFFEN|2026-06-23
+Einfuhrung in die WiInf|STUDIUM|T3|MITTEL|IN_BEARBEITUNG|2026-03-02
+Statistik 1|STUDIUM|asgdfhm|NIEDRIG|IN_BEARBEITUNG|2026-06-05
+adsfg|STUDIUM|gzdbf|NIEDRIG|IN_BEARBEITUNG|2026-05-05

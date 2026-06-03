@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import peaksoft.taskManager.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,22 +30,24 @@ public class UserInterface {
            System.out.println("6.Statistik anzeigen");
            System.out.println("0. Beenden");
            int wahlen=scanner.nextInt();
+           scanner.nextLine();
            switch (wahlen) {
                case 1->aufgabenZeigen();
                case 2->neueAufgabenErstellen();
                case 3->aufgabenSuchen();
-              // case 4->
-             //  case 5->
+               case 4->aufgabenAktualisieren();
+               case 5->deleteTask();
+               case 6->statistikAnzeigen();
                case 0->gehtLos=false;
                default -> System.out.println("Ungultige Eingabe!");
            }
-
        }
-
    }
 
-public void aufgabenZeigen(){
-       boolean gehtLos=true;
+private void aufgabenZeigen(){
+    boolean gehtLos=true;
+    while (gehtLos){
+
     log.info("Userin hat alle Tasks abgerufen");
     System.out.println("-----Aufgaben anzeigen--------");
     System.out.println("1. Alle Aufgaben anzeigen" );
@@ -54,6 +57,7 @@ public void aufgabenZeigen(){
     System.out.println( "5 Aufgaben dieser  Woche anzeigen" );
     System.out.println("0 Beenden");
     int wahlen=scanner.nextInt();
+    scanner.nextLine();
     switch (wahlen) {
         case 1->zeigeTasks(taskManager.getTasks());
         case 2->zeigeTasks(taskManager.getOffeneTasks());
@@ -63,6 +67,7 @@ public void aufgabenZeigen(){
         case 0->gehtLos=false;
         default -> System.out.println("Ungultige Eingabe!");
     }
+       }
 }
 private void zeigeTasks(List<Task>tasks){
        if (tasks.isEmpty()){
@@ -75,47 +80,65 @@ private void zeigeTasks(List<Task>tasks){
        }
 }
 private void neueAufgabenErstellen(){
-       log.info("Userin mochte neue Aufgabe erstellen");
-    System.out.println("Name von Task: ");
-    String taskName = scanner.next();
-    System.out.println("Type von Task wahlen:  1-STUDIUM, 2-HAUSHALT, 3-PRIVAT, 4->SONSTIGES ");
-    int taskType = scanner.nextInt();
-   TaskType type= switch (taskType) {
-        case 1-> TaskType.STUDIUM;
-        case 2->TaskType.HAUSHALT;
-        case 3->TaskType.PRIVAT;
-       default ->TaskType.SONSTIGES;
-    };
+       while (true){
+try {
+           log.info("Userin mochte neue Aufgabe erstellen");
+           System.out.println("Name von Task: ");
+           String taskName = scanner.nextLine();
+           System.out.println("Type von Task wahlen:  1-STUDIUM, 2-HAUSHALT, 3-PRIVAT, 4->SONSTIGES ");
+           int taskType = scanner.nextInt();
+    scanner.nextLine();
+           TaskType type = switch (taskType) {
+               case 1 -> TaskType.STUDIUM;
+               case 2 -> TaskType.HAUSHALT;
+               case 3 -> TaskType.PRIVAT;
+               case 4-> TaskType.SONSTIGES;
+               default -> throw new IllegalArgumentException("Ungultige Tasktyp");
 
-    System.out.println("Beschreibung von Task: ");
-    String taskDescription = scanner.next();
+           };
 
-    System.out.println( "Priority von Task:  1-HOCH, 2-MITTEL, 3-NIEDRIG");
-    int priority = scanner.nextInt();
-    Priority p=switch (priority){
-        case 1-> Priority.HOCH;
-        case 2-> Priority.MITTEL;
-        default-> Priority.NIEDRIG;
-    };
+           System.out.println("Beschreibung von Task: ");
+           String taskDescription = scanner.nextLine();
 
-    System.out.println( "Status von Task:  1-OFFEN, 2-IN BEARBEITUNG, 3-FERTIG");
-int status = scanner.nextInt();
-TaskStatus s=switch (status){
-    case 1-> TaskStatus.OFFEN;
-    case 2->TaskStatus.IN_BEARBEITUNG;
-    default ->TaskStatus.FERTIG;
-};
+           System.out.println("Priority von Task:  1-HOCH, 2-MITTEL, 3-NIEDRIG");
+           int priority = scanner.nextInt();
+    scanner.nextLine();
+           Priority p = switch (priority) {
+               case 1 -> Priority.HOCH;
+               case 2 -> Priority.MITTEL;
+               case 3 -> Priority.NIEDRIG;
+               default -> throw new IllegalArgumentException("Ungultige Priority");
 
-    System.out.println("Falligkeitsdatum (YYYY-MM-DD): ");
-    String falligkeitsdatum = scanner.next();
-    LocalDate datum=LocalDate.parse(falligkeitsdatum);
+           };
 
-    Task task=new Task(taskName,type,taskDescription,p,s,datum);
-    taskManager.addTask(task);
-    System.out.println("Aufgabe erfolgreich erstellt");
+           System.out.println("Status von Task:  1-OFFEN, 2-IN BEARBEITUNG, 3-FERTIG");
+           int status = scanner.nextInt();
+    scanner.nextLine();
+           TaskStatus s = switch (status) {
+               case 1 -> TaskStatus.OFFEN;
+               case 2 -> TaskStatus.IN_BEARBEITUNG;
+               case 3 -> TaskStatus.FERTIG;
+               default -> throw new IllegalArgumentException("Ungultige Status");
+           };
+
+           System.out.println("Falligkeitsdatum (YYYY-MM-DD oder YYYY-M-D): ");
+           String falligkeitsdatum = scanner.next();
+    DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-M-d");
+           LocalDate datum = LocalDate.parse(falligkeitsdatum, formatter);
+
+           Task task = new Task(taskName, type, taskDescription, p, s, datum);
+           taskManager.addTask(task);
+           System.out.println("Aufgabe erfolgreich erstellt");
+           break;
+       }
+       catch (Exception e){
+    log.error(e.getMessage());
+           System.out.println("Ungulge Eingabe!");
+}
+       }
 
    }
-public void aufgabenSuchen() {
+private void aufgabenSuchen() {
     boolean gehtlos = true;
     while (gehtlos){
         log.info("Userin mochte aufgabenSuchen");
@@ -305,9 +328,119 @@ private void zeitraumSuchen(){
         System.out.println(task);
     }
 }
+private void aufgabenAktualisieren(){
+    boolean gehtlos = true;
+    while (gehtlos){
+        log.info("Userin mochte Aufgabe aktualiesieren");
+        System.out.println("-------Aufgaben aktualisieren--------");
+        System.out.println("1 Status aktualisieren");
+        System.out.println("2 Priority aktualisieren");
+        System.out.println("3  Datum aktualisieren");
+        System.out.println("4 Als erledig markieren");
+        System.out.println("0 Beenden");
 
-public void aufgabenAktualisieren(){
+        int wahlen=scanner.nextInt();
+        scanner.nextLine();
+        switch (wahlen) {
+            case 1->statusAktualisieren();
+            case 2->priorityAktualisieren();
+            case 3->datumAktualisieren();
+            case 4->erledigMarkieren();
+            case 0-> gehtlos=false;
+            default -> System.out.println("Ungultige Eingabe!");
+        }
+}
+}
+private void statusAktualisieren(){
+    System.out.println("Name von Task eingeben");
+    String name= scanner.nextLine();
+    Task task=taskManager.getTaskByName(name);
+    if(task==null){
+        System.out.println("Keine Aufgaben vorhanden");
+        return;
+    }
+    System.out.println("Status von Task:  1-OFFEN, 2-IN BEARBEITUNG, 3-FERTIG");
+    int newstatus = scanner.nextInt();
+    scanner.nextLine();
+    TaskStatus s = switch (newstatus) {
+        case 1 -> TaskStatus.OFFEN;
+        case 2 -> TaskStatus.IN_BEARBEITUNG;
+        case 3 -> TaskStatus.FERTIG;
+        default -> throw new IllegalArgumentException("Ungultige Status");
+    };
+    taskManager.updateStatus(task,s);
+}
+private void priorityAktualisieren(){
+    System.out.println("Name von Task eingeben");
+    String name= scanner.nextLine();
+    Task task=taskManager.getTaskByName(name);
+    if(task==null){
+        System.out.println("Keine Aufgaben vorhanden");
+        return;
+    }
+    System.out.println("Priority von Task:  1-HOCH, 2-MITTEL, 3-NIEDRIG");
+    int newp = scanner.nextInt();
+    scanner.nextLine();
+    Priority p = switch (newp) {
+        case 1 -> Priority.HOCH;
+        case 2 -> Priority.MITTEL;
+        case 3 -> Priority.NIEDRIG;
+        default -> throw new IllegalArgumentException("Ungultige Status");
+    };
+    taskManager.updatePriority(task,p);
+}
+private void datumAktualisieren(){
+        System.out.println("Name von Task eingeben");
+        String name= scanner.nextLine();
+        Task task=taskManager.getTaskByName(name);
+        if(task==null){
+            System.out.println("Keine Aufgaben vorhanden");
+            return;
+        }
+    System.out.println("Falligkeitsdatum (YYYY-MM-DD oder YYYY-M-D): ");
+    String falligkeitsdatum = scanner.next();
+    DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-M-d");
+    LocalDate datum = LocalDate.parse(falligkeitsdatum, formatter);
+        taskManager.updateDate(task,datum);
+    }
+    private void erledigMarkieren(){
+       System.out.println("Name von Task eingeben");
+       String name= scanner.nextLine();
+       taskManager.taskAlsErledingtMarkieren(name);
+    }
+private void deleteTask(){
+       System.out.println("Name von Task eingeben");
+       String name= scanner.nextLine();
+       taskManager.deleteTaskByName(name);
+    System.out.println("Falls vorhanden wurde Task geloscht");
 
 }
-
+private void statistikAnzeigen(){
+       boolean los=true;
+       while (los){
+           log.info("User mcohte statistik sehen");
+           System.out.println("------Statistik-------");
+           System.out.println("1 Anzahl offene Aufgaben");
+           System.out.println(" 2 Anzahl erledigte Aufgabe");
+           System.out.println("3 Aufgaben nach Falligkeit sortieren");
+           System.out.println("4 Aufgaben nach Status sortieren");
+           System.out.println("5 Aufgaben nach Priority sortieren");
+           System.out.println("6 Erledigte Aufgabe");
+           System.out.println("7 Aufgaben nach Datum+Priority sortieren");
+           System.out.println("0 Zuruck");
+           int wahlen=scanner.nextInt();
+           scanner.nextLine();
+           switch (wahlen) {
+               case 1-> System.out.println("Anzahl offener Aufgaben: "+taskManager.getAnzahlOffeneTasks());
+               case 2-> System.out.println("Anzahl erledigte Aufgaben: "+taskManager.getAnzahlErledingteAufgabe());
+               case 3->zeigeTasks(taskManager.sortierenNachFalligkeit());
+               case 4->zeigeTasks(taskManager.sortierenNachStatus());
+               case 5->zeigeTasks(taskManager.sortierenNachPriority());
+               case 6->zeigeTasks(taskManager.erledigteAufgaben());
+               case 7->zeigeTasks(taskManager.sortierenNachDAtumUndPriority());
+               case 0-> los=false;
+               default -> throw new IllegalArgumentException("Ungultige Eingabe");
+           }
+       }
+}
 }

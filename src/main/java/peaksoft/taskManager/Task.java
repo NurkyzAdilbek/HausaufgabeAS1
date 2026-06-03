@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 @EqualsAndHashCode
 public class Task {
@@ -18,4 +17,16 @@ private String taskDescription;
 private Priority priority;
 private TaskStatus status;
 private LocalDate falligkeit;
+@Override
+    public String toString() {
+    return "---------------" +
+            "Aufgabe :  " + taskName +
+            "  Tasktype: " + taskType +
+            "  Beschreibung:  " + taskDescription +
+            "  Priority:   " + priority +
+            "  Status:   " + status +"" +
+            "   Falligkeitsdatum:   "+ falligkeit ;
+
 }
+}
+
