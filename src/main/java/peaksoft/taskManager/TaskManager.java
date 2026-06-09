@@ -1,28 +1,23 @@
 package peaksoft.taskManager;
 
-
 import lombok.extern.slf4j.Slf4j;
 import peaksoft.FileManager;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-
 @Slf4j
+
 
 public class TaskManager {
     private List<Task>tasks;
     private FileManager fileManager;
-
-
     public TaskManager() {
         fileManager = new FileManager();
         tasks=fileManager.taskLaden();
     }
   //CREATE METHOD
-
     public void addTask(Task task) {
         if (task==null){
             throw new IllegalArgumentException("Task is null");
@@ -31,7 +26,6 @@ public class TaskManager {
        fileManager.taskSpeichern(tasks);
        log.info("Task wurde erfolgleich hinzugefugt: "+task.getTaskName());
     }
-
     //GET METHODS
     public List<Task> getTasks() {
         return this.tasks;
@@ -257,6 +251,7 @@ public class TaskManager {
         }
         return ergebnis;
 }
+
     public String getMotivation(){
         List<String>satze=fileManager.motivationLaden();
         if(satze.isEmpty()){
@@ -264,22 +259,19 @@ public class TaskManager {
         }
         Random random=new Random();
         int zufall=random.nextInt(satze.size());
-        return satze.get(zufall);
-}
+        return satze.get(zufall);}
     public void taskAlsErledingtMarkieren(String taskname){
         Task task=getTaskByName(taskname);
         if (task!=null){
             task.setStatus(TaskStatus.FERTIG);
             fileManager.taskSpeichern(this.tasks);
             log.info("Task "+taskname+ " als Fertig erledigt markiert");
-            System.out.println("Aufgabe erledingt!");
-            System.out.println(getMotivation());
-        }
+            System.out.println("Aufgabe erledigt!");
+            System.out.println(getMotivation()); }
         else {
             log.warn("Task "+taskname+" nicht gefunden");
-            System.out.println("Aufgabe mit Name"+taskname+ " wurde nicht gefunden");
-        }
-}
+            System.out.println("Aufgabe mit Name"+taskname+ " wurde nicht gefunden");}}
+
     //UPDATE METHODS
     public void updateStatus(Task gtask, TaskStatus newStatus) {
         if(gtask==null||newStatus==null){
@@ -348,10 +340,6 @@ public class TaskManager {
         }
 
 }
-
-
-
-
             //DELETE METHODS
     public void deleteTask(Task gtask) {
         if (gtask==null){
@@ -436,10 +424,10 @@ return sortierteTasks;
     }
     public List<Task>sortierenNachDAtumUndPriority(){
         List<Task>sortierteTasks=new ArrayList<>(this.tasks);
-        sortierteTasks.sort(Comparator.comparing(Task::getFalligkeit).thenComparing(Task::getPriority));
+        sortierteTasks.sort(Comparator.comparing(Task::getFalligkeit).
+                thenComparing(Task::getPriority));
         log.info("Ergolgreich sortiert");
-        return sortierteTasks;
-    }
+        return sortierteTasks; }
     public List<Task>erledigteAufgaben(){
         List<Task>erledigteTasks=new ArrayList<>();
         for(Task task:this.tasks){

@@ -16,12 +16,11 @@ public class UserInterface {
 
    public UserInterface() {
        taskManager = new TaskManager();
-       scanner = new Scanner(System.in);
-   }
+       scanner = new Scanner(System.in);}
    public void start() {
        boolean gehtLos=true;
        while(gehtLos) {
-           System.out.println("|n-----TO DO LISTE-----");
+           System.out.println("-----TO DO LISTE-----");
            System.out.println("1. Aufgaben anzeigen");
            System.out.println("2. Neue Aufgaben erstellen");
            System.out.println("3. Aufgaben suchen");
@@ -123,13 +122,19 @@ try {
 
            System.out.println("Falligkeitsdatum (YYYY-MM-DD oder YYYY-M-D): ");
            String falligkeitsdatum = scanner.next();
+           try{
     DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-M-d");
            LocalDate datum = LocalDate.parse(falligkeitsdatum, formatter);
 
            Task task = new Task(taskName, type, taskDescription, p, s, datum);
            taskManager.addTask(task);
            System.out.println("Aufgabe erfolgreich erstellt");
-           break;
+           }
+           catch (Exception e){
+               System.out.println("Ungultiges Datum");
+           }
+
+    break;
        }
        catch (Exception e){
     log.error(e.getMessage());
@@ -309,24 +314,43 @@ private void sucheByDate(){
 private void sucheBestimDatum(){
     System.out.println("Welches DAtum suchen Sie?");
     System.out.println("Geben Sie Datum ein YYYY-MM-DD");
-    LocalDate localDate=LocalDate.parse(scanner.next());
-    List<Task>tasks=taskManager.getTasksByDate(localDate);
+    String date= scanner.next();
+    scanner.nextLine();
+
+    try{DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-M-d");
+        LocalDate d=LocalDate.parse(date,formatter);
+
+    List<Task>tasks=taskManager.getTasksByDate(d);
     if(tasks.isEmpty()){
         System.out.println("Keine Aufgaben vorhanden");
     }
     for (Task task:tasks){
         System.out.println(task);
-    }
+    }}
+    catch (Exception e){
+        System.out.println("Ungultiges DAtum");
+        }
 }
 private void zeitraumSuchen(){
+       try {
     System.out.println("Von Datum YYYY-MM-DD");
-    LocalDate from=LocalDate.parse(scanner.next());
+    String date= scanner.next();
+    scanner.nextLine();
+    DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-M-d");
+    LocalDate from=LocalDate.parse(date,formatter);
     System.out.println("bis DAtum YYYY-MM-DD");
-    LocalDate to=LocalDate.parse(scanner.next());
+           String date2= scanner.next();
+           scanner.nextLine();
+           DateTimeFormatter formatter2=DateTimeFormatter.ofPattern("yyyy-M-d");
+    LocalDate to=LocalDate.parse(date2,formatter2);
     List<Task>tasks=taskManager.getTasksByDateFromTo(from,to);
     for(Task task:tasks){
         System.out.println(task);
-    }
+    }}
+       catch (Exception e){
+           System.out.println("Ungtiges DAtum");
+           log.error("Fehler bei Zeitraum der Datum");
+       }
 }
 private void aufgabenAktualisieren(){
     boolean gehtlos = true;
@@ -390,6 +414,9 @@ private void priorityAktualisieren(){
     taskManager.updatePriority(task,p);
 }
 private void datumAktualisieren(){
+       try {
+
+
         System.out.println("Name von Task eingeben");
         String name= scanner.nextLine();
         Task task=taskManager.getTaskByName(name);
@@ -402,7 +429,13 @@ private void datumAktualisieren(){
     DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-M-d");
     LocalDate datum = LocalDate.parse(falligkeitsdatum, formatter);
         taskManager.updateDate(task,datum);
-    }
+           System.out.println("Datum wurde erfolgreich aktualisiert");
+           log.info("Datum von Task "+name+" aktualisiert in "+datum);
+    }catch(Exception e){
+           System.out.println("Fehler bei Zeitraum der Datum");
+           log.error("Fehler bei Datum");
+       }
+   }
     private void erledigMarkieren(){
        System.out.println("Name von Task eingeben");
        String name= scanner.nextLine();
@@ -411,8 +444,14 @@ private void datumAktualisieren(){
 private void deleteTask(){
        System.out.println("Name von Task eingeben");
        String name= scanner.nextLine();
+       int vorher=taskManager.getTasks().size();
        taskManager.deleteTaskByName(name);
-    System.out.println("Falls vorhanden wurde Task geloscht");
+       if (taskManager.getTasks().size()<vorher){
+           System.out.println("Aufgabe wurde erfolgreich geloscht");
+       }
+       else {
+           System.out.println("Aufgabe wurde nicht gefunden");
+       }
 
 }
 private void statistikAnzeigen(){

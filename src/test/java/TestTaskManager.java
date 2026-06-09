@@ -10,12 +10,12 @@ import java.util.List;
 public class TestTaskManager {
     private TaskManager taskManager;
     private Task testTask;
-
-
     @BeforeEach
     public void setUp() {
         taskManager = new TaskManager();
-        testTask = new Task("AS", TaskType.STUDIUM, "Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG, LocalDate.now().plusDays(1));
+        testTask = new Task("AS", TaskType.STUDIUM,
+                "Hausaufgabe 1", Priority.HOCH, TaskStatus.IN_BEARBEITUNG,
+                LocalDate.now().plusDays(1));
     }
     @AfterEach
     void tearDown(){
@@ -26,14 +26,12 @@ public class TestTaskManager {
             e.printStackTrace();
         }
     }
-
     @Test
     @DisplayName("Task erfolgreich hinzufügen")
     void testAddTask() {
         taskManager.addTask(testTask);
         assertTrue(taskManager.getTasks().contains(testTask));
     }
-
     @Test
     @DisplayName("Null Task wirft Exception")
     void testAddTaskNull() {
@@ -41,21 +39,18 @@ public class TestTaskManager {
             taskManager.addTask(null);
         });
     }
-
     @Test
     @DisplayName("Get all Tasks ")
     void testGetAllTasks() {
         taskManager.addTask(testTask);
         assertFalse(taskManager.getTasks().isEmpty());
     }
-
     @Test
     @DisplayName("Task wurde erfolgreich gefunden")
     void testTaskByName() {
         taskManager.addTask(testTask);
         assertNotNull(taskManager.getTaskByName("AS"));
     }
-
     @Test
     @DisplayName("Null Name wirft Exception")
     void testTaskByNameNull() {
@@ -63,7 +58,6 @@ public class TestTaskManager {
             taskManager.addTask(null);
         });
     }
-
     @Test
     @DisplayName("Leerer Name wirft Exception")
     void testTaskByNameEmpty() {
@@ -71,7 +65,6 @@ public class TestTaskManager {
             taskManager.getTaskByName("");
         });
     }
-
     @Test
     @DisplayName("Null Priority wirft Exception")
     void testTaskByPriorityNull() {
@@ -79,21 +72,18 @@ public class TestTaskManager {
             taskManager.getTasksByPriority(null);
         });
     }
-
     @Test
     @DisplayName("Task wurde erfolgreich bei Priority gefunden")
     void testTaskByPriority() {
         taskManager.addTask(testTask);
         assertFalse(taskManager.getTasksByPriority(testTask.getPriority()).isEmpty());
     }
-
     @Test
     @DisplayName("Get by Date ")
     void testTaskByDate() {
         taskManager.addTask(testTask);
         assertFalse(taskManager.getTasksByDate(testTask.getFalligkeit()).isEmpty());
     }
-
     @Test
     @DisplayName("Null Falligkeit wirft Exception")
     void testTaskByFalligkeitNull() {
@@ -101,8 +91,6 @@ public class TestTaskManager {
             taskManager.getTasksByDate(null);
         });
     }
-
-
     @Test
     @DisplayName("Task in diesem Zeitraum wurde erfolgreich gefunden ")
     void testTaskFromDateTo() {
@@ -424,10 +412,12 @@ public class TestTaskManager {
 @Test
     @DisplayName("Uberfallige Aufgaben wurden erfolgreich gefunden")
     void testUberfalligeTaks(){
-    Task task=new Task("AS",TaskType.STUDIUM,"Hausaufgabe 1",Priority.HOCH,TaskStatus.IN_BEARBEITUNG,LocalDate.now().minusDays(3));
+    Task task=new Task("AS",TaskType.STUDIUM,
+            "Hausaufgabe 1",Priority.HOCH,TaskStatus.IN_BEARBEITUNG,
+            LocalDate.now().minusDays(3));
     taskManager.addTask(task);
-        assertTrue(taskManager.getUberfalligeTasks().contains(task));
-}
+        assertTrue(taskManager.getUberfalligeTasks().contains(task));}
+
 
 @Test
     @DisplayName("Tasks fur diese Woche wurden erfolgreich gefunden")
@@ -482,8 +472,12 @@ public class TestTaskManager {
 @Test
     @DisplayName("Testen sortieren nach Falligkeit")
     void testSortierenNachFalligkeit(){
-        Task task1=new Task("Hausaufgabe 3",TaskType.STUDIUM,"Hausaufgabe 3",Priority.HOCH ,TaskStatus.OFFEN, LocalDate.of(2026, 06, 12));
-        Task task2=new Task("Hausaufgabe 4",TaskType.STUDIUM,"Hausaufgabe 4",Priority.MITTEL ,TaskStatus.OFFEN, LocalDate.of(2026, 06, 24));
+        Task task1=new Task("Hausaufgabe 3",TaskType.STUDIUM,
+                "Hausaufgabe 3",Priority.HOCH ,TaskStatus.OFFEN,
+                LocalDate.of(2026, 06, 12));
+        Task task2=new Task("Hausaufgabe 4",TaskType.STUDIUM,
+                "Hausaufgabe 4",Priority.MITTEL ,TaskStatus.OFFEN,
+                LocalDate.of(2026, 06, 24));
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         List<Task> sortierteT=taskManager.sortierenNachFalligkeit();

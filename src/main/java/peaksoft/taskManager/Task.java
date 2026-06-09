@@ -1,9 +1,6 @@
 package peaksoft.taskManager;
-
 import lombok.*;
-
 import java.time.LocalDate;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,8 +22,5 @@ private LocalDate falligkeit;
             "  Beschreibung:  " + taskDescription +
             "  Priority:   " + priority +
             "  Status:   " + status +"" +
-            "   Falligkeitsdatum:   "+ falligkeit ;
-
-}
-}
+            "   Falligkeitsdatum:   "+ falligkeit ; }}
 

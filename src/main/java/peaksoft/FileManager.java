@@ -5,7 +5,6 @@ import peaksoft.taskManager.Priority;
 import peaksoft.taskManager.Task;
 import peaksoft.taskManager.TaskStatus;
 import peaksoft.taskManager.TaskType;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,9 +12,7 @@ import java.util.List;
 @Slf4j
 
 public class FileManager {
-    public FileManager() {
-    }
-
+    public FileManager() {}
     public List<Task> taskLaden(){
        List<Task> tasks = new ArrayList<Task>();
         try(BufferedReader taskReader=new BufferedReader(new FileReader("todo.txt"))){
@@ -28,18 +25,11 @@ public class FileManager {
                        teile[2],
                        Priority.valueOf(teile[3]),
                        TaskStatus.valueOf(teile[4]),
-                       LocalDate.parse(teile[5])
-               );
-               tasks.add(task);
-
-            }
-        }
-        catch(
-                IOException e){
-           log.error("Fehler beim Laden der Task aufgetreten");
-        }
-       return tasks;
-   }
+                       LocalDate.parse(teile[5]));
+               tasks.add(task);}}
+        catch(IOException e){
+           log.error("Fehler beim Laden der Task aufgetreten");}
+       return tasks;}
     public void taskSpeichern(List<Task> tasks){
         try (BufferedWriter taskwriter=new BufferedWriter(new FileWriter("todo.txt"))){
            for(Task task:tasks){
@@ -59,7 +49,6 @@ public class FileManager {
         }
         log.info("Task wurde erfolgreich gespeichert");
     }
-
     public List<String>motivationLaden(){
         List<String>satze=new ArrayList<>();
         try(BufferedReader reader=new BufferedReader(new FileReader("motivation.txt"))){
