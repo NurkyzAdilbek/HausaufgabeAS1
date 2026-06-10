@@ -12,32 +12,24 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 <dependencies>
-    <!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+
     <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>1.18.44</version>
         <scope>compile</scope>
     </dependency>
-    <!-- Source: https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
         <version>5.10.3</version>
         <scope>test</scope>
     </dependency>
-
     <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
         <version>1.5.8</version>
     </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.23.1</version>
-        </dependency>
-
 
 </dependencies>
     <build>
